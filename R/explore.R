@@ -33,14 +33,14 @@
 #'  detections, user intervention is suggested. If left NULL (default), user
 #' intervention is never suggested.
 #' @param inactive.warning If a tag spends a number of days equal or greater
-#'  than \code{inactive.error} in a given array at the tail of the respective
+#'  than \code{inactive.warning} in a given array at the tail of the respective
 #'  detections, a warning is issued. If left NULL (default), no warnings are
 #'  issued.
 #' @param jump.error If a tag crosses a number of arrays equal or greater than
 #'  \code{jump.error} without being detected, user intervention is suggested.
 #'  If left NULL (default), user intervention is never suggested.
 #' @param jump.warning If a tag crosses a number of arrays equal or greater
-#'  than \code{jump.error} without being detected, a warning is issued. If left
+#'  than \code{jump.warning} without being detected, a warning is issued. If left
 #'  NULL (default), no warnings are issued.
 #' @param max.interval The number of minutes that must pass between detections
 #'  for a new event to be created. Defaults to 60.
@@ -51,7 +51,7 @@
 #' @param override A vector of signals for which the user intends to manually
 #'  define which movement events are valid and invalid.
 #' @param plot.detections.by The type of y axis desired for the individual
-#'  detection plots. While the argument defaults to "auto", it can be hard-set 
+#'  detection plots. While the argument defaults to "auto", it can be hard-set
 #'  to one of "stations" or "arrays".
 #' @param print.releases Logical: Should the release sites be printed in the
 #'  study area diagrams?
@@ -152,7 +152,7 @@ explore <- function(
   GUI = c("needed", "always", "never"),
   save.tables.locally = FALSE,
   print.releases = TRUE,
-  plot.detections.by = c("auto", "stations", "arrays")) 
+  plot.detections.by = c("auto", "stations", "arrays"))
 {
 
 # clean up any lost helpers
@@ -195,7 +195,7 @@ explore <- function(
                         override = override,
                         print.releases = print.releases,
                         plot.detections.by = plot.detections.by)
-  
+
   speed.method <- aux$speed.method
   speed.warning <- aux$speed.warning
   speed.error <- aux$speed.error
@@ -341,7 +341,7 @@ explore <- function(
     if (is.na(match(extractSignals(tag), override))) {
       output <- checkMinimumN(movements = movements[[tag]], tag = tag, minimum.detections = minimum.detections, n = counter)
 
-      output <- checkImpassables(movements = output, tag = tag, bio = bio, detections = detections.list[[tag]], n = counter, 
+      output <- checkImpassables(movements = output, tag = tag, bio = bio, detections = detections.list[[tag]], n = counter,
                                  spatial = spatial, dotmat = dotmat, GUI = GUI, save.tables.locally = save.tables.locally)
 
       output <- checkJumpDistance(movements = output, bio = bio, tag = tag, dotmat = dotmat, paths = paths, arrays = arrays,
@@ -351,8 +351,8 @@ explore <- function(
       if (do.checkSpeeds) {
         temp.valid.movements <- simplifyMovements(movements = output, tag = tag, bio = bio, discard.first = discard.first,
                                                   speed.method = speed.method, dist.mat = dist.mat)
-        output <- checkSpeeds(movements = output, tag = tag, detections = detections.list[[tag]], n = counter, 
-                              valid.movements = temp.valid.movements, speed.warning = speed.warning, 
+        output <- checkSpeeds(movements = output, tag = tag, detections = detections.list[[tag]], n = counter,
+                              valid.movements = temp.valid.movements, speed.warning = speed.warning,
                               speed.error = speed.error, GUI = GUI, save.tables.locally = save.tables.locally)
         rm(temp.valid.movements)
       }
@@ -361,9 +361,9 @@ explore <- function(
         output <- checkInactiveness(movements = output, tag = tag, detections = detections.list[[tag]], n = counter,
                                     inactive.warning = inactive.warning, inactive.error = inactive.error,
                                     dist.mat = dist.mat, GUI = GUI, save.tables.locally = save.tables.locally)
-      }  
+      }
     } else { # nocov start
-      output <- overrideValidityChecks(moves = movements[[tag]], tag = tag, detections = detections.list[[tag]], 
+      output <- overrideValidityChecks(moves = movements[[tag]], tag = tag, detections = detections.list[[tag]],
                                        GUI = GUI, save.tables.locally = save.tables.locally, n = counter)
     } # nocov end
     return(output)
@@ -381,7 +381,7 @@ explore <- function(
 
   aux <- list(valid.movements = valid.movements,
               spatial = spatial,
-              rsp.info = list(bio = bio, 
+              rsp.info = list(bio = bio,
                               analysis.type = "explore"))
   times <- getTimes(input = aux, move.type = "array", event.type = "arrival", n.events = "first")
   rm(aux)
@@ -398,7 +398,7 @@ explore <- function(
   deployments <- do.call(rbind.data.frame, deployments)
 
   # extra info for potential RSP analysis
-  rsp.info <- list(analysis.type = "explore", analysis.time = the.time, 
+  rsp.info <- list(analysis.type = "explore", analysis.time = the.time,
                    bio = bio, tz = tz, actel.version = utils::packageVersion("actel"))
 
   if (!is.null(override))
@@ -421,7 +421,7 @@ explore <- function(
   }
 
   if (interactive()) { # nocov start
-    decision <- userInput(paste0("Would you like to save a copy of the results to ", resultsname, "?(y/n) "), 
+    decision <- userInput(paste0("Would you like to save a copy of the results to ", resultsname, "?(y/n) "),
                           choices = c("y", "n"), hash = "# save results?")
   } else { # nocov end
     decision <- "n"
@@ -430,10 +430,10 @@ explore <- function(
   if (decision == "y") { # nocov start
     appendTo(c("Screen", "Report"), paste0("M: Saving results as '", resultsname, "'."))
     if (attributes(dist.mat)$valid)
-      save(bio, detections, valid.detections, spatial, deployments, arrays, 
+      save(bio, detections, valid.detections, spatial, deployments, arrays,
         movements, valid.movements, times, rsp.info, dist.mat, file = resultsname)
     else
-      save(bio, detections, valid.detections, spatial, deployments, arrays, 
+      save(bio, detections, valid.detections, spatial, deployments, arrays,
         movements, valid.movements, times, rsp.info, file = resultsname)
   } else {
     appendTo(c("Screen", "Report"), paste0("M: Skipping saving of the results."))
@@ -456,24 +456,24 @@ explore <- function(
 
     biometric.fragment <- printBiometrics(bio = bio)
 
-    printDot(dot = dot, 
-             spatial = spatial, 
+    printDot(dot = dot,
+             spatial = spatial,
              print.releases = print.releases)
 
-    individual.plots <- printIndividuals(detections.list = detections, 
+    individual.plots <- printIndividuals(detections.list = detections,
                                          movements = movements,
                                          valid.movements = valid.movements,
                                          spatial = spatial,
                                          rsp.info = rsp.info,
                                          type = plot.detections.by)
 
-    circular.plots <- printCircular(times = timesToCircular(times), 
+    circular.plots <- printCircular(times = timesToCircular(times),
                                     bio = bio)
 
     if (any(sapply(valid.detections, function(x) any(!is.na(x$Sensor.Value))))) {
-      sensor.plots <- printSensorData(detections = valid.detections, 
+      sensor.plots <- printSensorData(detections = valid.detections,
                                       spatial = spatial,
-                                      rsp.info = rsp.info, 
+                                      rsp.info = rsp.info,
                                       type = plot.detections.by)
     } else {
       sensor.plots <- NULL
@@ -541,7 +541,7 @@ explore <- function(
   jobname <- paste0(gsub(" |:", ".", as.character(Sys.time())), ".actel.log.txt")
 
   if (interactive() & !report) { # nocov start
-    decision <- userInput(paste0("Would you like to save a copy of the analysis log to ", jobname, "?(y/n) "), 
+    decision <- userInput(paste0("Would you like to save a copy of the analysis log to ", jobname, "?(y/n) "),
                           choices = c("y", "n"), hash = "# save job log?")
   } else { # nocov end
     decision <- "n"
@@ -556,14 +556,14 @@ explore <- function(
   finished.unexpectedly <- FALSE
 
   output <- list(bio = bio,
-                 detections = detections, 
-                 valid.detections = valid.detections, 
-                 spatial = spatial, 
-                 deployments = deployments, 
+                 detections = detections,
+                 valid.detections = valid.detections,
+                 spatial = spatial,
+                 deployments = deployments,
                  arrays = arrays,
-                 movements = movements, 
-                 valid.movements = valid.movements, 
-                 times = times, 
+                 movements = movements,
+                 valid.movements = valid.movements,
+                 times = times,
                  rsp.info = rsp.info)
 
   if (attributes(dist.mat)$valid)
